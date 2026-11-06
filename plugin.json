@@ -1,0 +1,43 @@
+{
+  "id": "navidrome",
+  "name": "Navidrome",
+  "version": "1.0.0",
+  "minAppVersion": "0.1.8",
+  "main": "index.js",
+  "playback": "stream",
+  "permissions": {
+    "network": ["*"],
+    "process": [
+      "ffmpeg",
+      "/opt/homebrew/bin/ffmpeg",
+      "/usr/local/bin/ffmpeg",
+      "/opt/local/bin/ffmpeg"
+    ]
+  },
+  "settings": [
+    {
+      "key": "serverUrl",
+      "label": "Server URL",
+      "help": "The address of your Navidrome server, such as https://music.example.com"
+    },
+    {
+      "key": "username",
+      "label": "Username",
+      "help": "Your Navidrome account"
+    },
+    {
+      "key": "password",
+      "label": "Password",
+      "help": "Used to sign requests to the Subsonic API, and kept in this plugin's settings on this device"
+    }
+  ],
+  "navigation": [
+    { "builtin": "home" },
+    { "title": "Albums", "page": "albums:alphabeticalByName:0", "icon": "album" },
+    { "title": "Artists", "page": "artists", "icon": "artist" },
+    { "title": "Genres", "page": "genres", "icon": "note" },
+    { "builtin": "liked", "title": "Liked" },
+    { "builtin": "savedAlbums", "title": "Starred" },
+    { "builtin": "stations", "title": "Radio" }
+  ]
+}

@@ -328,7 +328,7 @@ ffmpeg 处理：
 | `stations` / `stationNext`（无尽电台） | 内置 `rd:__endless__`；`getRandomSongs?size=500` |
 | `lyrics` | Better Lyrics API；回退 `getLyricsBySongId`、`getLyrics` |
 | `stream` | `getSong` 判断后缀，再拼 `stream` URL |
-| 封面 | `getCoverArt?id=<coverArt 或实体 id>&size=600` |
+| 封面 | `getCoverArt?id=<coverArt 或实体 id>&size={size}`，由应用按显示尺寸替换 |
 
 首页的“猜你喜欢”取常听和收藏专辑里出现最多的流派，再用
 `getRandomSongs?genre=<流派>` 取 12 首歌；流派歌曲不足时用随机歌曲补足。

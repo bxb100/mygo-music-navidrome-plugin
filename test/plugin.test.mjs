@@ -288,7 +288,7 @@ assert.equal(requests.filter((request) => request.method === "getRandomSongs")[0
 assert.equal(home.sections[1].albums[0].id, "al:al1");
 assert.equal(home.sections[1].albums[0].released, "2024-05-01");
 assert.equal(home.sections[1].albums[0].saved, true);
-assert.match(home.sections[1].albums[0].imageUrl, /\/rest\/getCoverArt\.view\?.*[?&]id=al1&size=600$/);
+assert.match(home.sections[1].albums[0].imageUrl, /\/rest\/getCoverArt\.view\?.*[?&]id=al1&size=%7Bsize%7D$/);
 assert.match(home.sections[1].albums[0].imageUrl, /s=mygo-music/);
 assert.equal(home.sections[1].morePage, "albums:newest:12");
 

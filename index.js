@@ -129,7 +129,7 @@ const rawId = (id) => unpack(id).id;
 
 function coverURL(id) {
   if (!id) return;
-  return mediaURL("getCoverArt", { id, size: 600 });
+  return mediaURL("getCoverArt", { id, size: "{size}" });
 }
 
 function artistRef(id, name) {

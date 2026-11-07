@@ -3,7 +3,7 @@
 A [MyGo Music](https://github.com/egoist/mygo-music) plugin that plays a
 [Navidrome](https://www.navidrome.org) library through its Subsonic API.
 
-It needs MyGo Music 0.1.8 or later, and speaks English or Simplified Chinese
+It needs MyGo Music 0.1.20 or later, and speaks English or Simplified Chinese
 as the app does. Your library's titles and names keep their original language.
 
 ## Install

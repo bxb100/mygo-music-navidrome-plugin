@@ -1,8 +1,8 @@
 {
   "id": "navidrome",
   "name": "Navidrome",
-  "version": "1.0.1",
-  "minAppVersion": "0.1.8",
+  "version": "1.0.2",
+  "minAppVersion": "0.1.20",
   "main": "index.js",
   "playback": "stream",
   "permissions": {

@@ -2,7 +2,7 @@
 
 来源：[egoist/mygo-music README](https://github.com/egoist/mygo-music#publishing-a-plugin) 与
 [`internal/music/music.go`](https://github.com/egoist/mygo-music/blob/main/internal/music/music.go)，
-整理于 2026-11-06。
+整理于 2026-11-07。
 
 ## 插件是什么
 
@@ -51,7 +51,7 @@ my-plugin/
 | `id` | 插件标识 |
 | `name` | 显示名称，可被 `locales` 翻译 |
 | `version` | 插件版本 |
-| `minAppVersion` | 兼容的最老应用版本；更老的应用拒绝安装并提示升级。0.1.8 之前的版本不读这个字段 |
+| `minAppVersion` | 兼容的最老应用版本；更老的应用拒绝安装并提示升级。0.1.8 之前的版本不读这个字段。在 `imageUrl` 里用 `{size}` 的插件填 `0.1.20` |
 | `main` | 入口文件，JavaScript 或 TypeScript |
 | `playback` | `stream`：应用播放 `stream` 返回的音频；`remote`：插件自己发声，应用调用 `remote*` |
 | `permissions.network` | `fetch` 能访问的主机，支持 `*.example.com`；`["*"]` 允许任意主机；缺省则不能访问网络 |
@@ -128,6 +128,22 @@ my-plugin/
 ## 数据模型
 
 字段名就是 JSON 名；时间单位为毫秒。
+
+### 图片尺寸
+
+`imageUrl` 可以用 `{size}` 表示应用显示图片的宽度，服务端按这个尺寸出图：
+
+```json
+{ "imageUrl": "https://img.example.com/cover.jpg?param={size}y{size}" }
+{ "imageUrl": "https://img.example.com/{size}/cover.jpg" }
+```
+
+应用把 `{size}` 换成显示的像素数：列表行 40，Now Playing 600；没有指定尺寸的地方用
+600。查询串里被 JavaScript 的 `URL` 写成 `%7Bsize%7D` 也算。
+
+0.1.20 之前的应用会把 `{size}` 原样请求，所以给出占位符的插件要把
+`minAppVersion` 设为 `0.1.20`。不用占位符时不要给原图：应用会下载并解码整张图片，
+几千像素的原图有几 MB，却只显示在列表里；服务能缩放就给 800 像素左右。
 
 ### Artist
 

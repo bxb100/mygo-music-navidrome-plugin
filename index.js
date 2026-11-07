@@ -202,7 +202,7 @@ function toArtist(artist) {
     id: pack("ar", artist.id),
     name: artist.name,
   };
-  const image = artist.artistImageUrl || coverURL(artist.coverArt);
+  const image = coverURL(artist.coverArt) || artist.artistImageUrl;
   if (image) out.imageUrl = image;
   return out;
 }

@@ -25,6 +25,8 @@ globalThis.fetch = async (input, init) => {
 const artist = {
   id: "ar1",
   name: "Artist One",
+  coverArt: "ar1",
+  artistImageUrl: "http://127.0.0.1/rest/getCoverArt.view?id=ar1&size=600",
   albumCount: 1,
   starred: "2024-06-01T00:00:00Z",
 };
@@ -308,7 +310,7 @@ assert.equal(albumPage.tracks.length, 2);
 
 const artistPage = await plugin.artist({ id: "ar:ar1" });
 assert.equal(artistPage.artist.id, "ar:ar1");
-assert.equal(artistPage.artist.imageUrl, undefined);
+assert.match(artistPage.artist.imageUrl, /\/rest\/getCoverArt\.view\?.*[?&]id=ar1&size=%7Bsize%7D$/);
 assert.equal(artistPage.albums[0].id, "al:al1");
 assert.equal(artistPage.tracks.length, 2);
 

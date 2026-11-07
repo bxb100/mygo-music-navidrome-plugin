@@ -26,8 +26,9 @@ The URL is the Navidrome web address, for example `https://music.example.com`.
 - Liked songs and starred albums
 - Playlists, including creating, renaming, deleting, adding, removing and
   reordering tracks
-- Playback through Navidrome's `stream` endpoint: standard and high are
-  transcoded on this Mac with ffmpeg, lossless plays the original file
+- Playback through Navidrome's `stream` endpoint: plays the original file
+  directly for formats MyGo decodes, and transcodes other formats on this Mac
+  with ffmpeg
 - Lyrics from Better Lyrics, with word timing, falling back to Navidrome's own
   synchronized lyrics
 - Endless radio that shuffles your library, skipping songs you've heard recently
@@ -36,7 +37,8 @@ The URL is the Navidrome web address, for example `https://music.example.com`.
 Not supported: podcasts, comments and following artists, which Navidrome's
 Subsonic API doesn't expose.
 
-Standard and high playback need ffmpeg on this Mac:
+Playback plays native audio formats directly; formats MyGo can't decode need
+ffmpeg on this Mac:
 
 ```bash
 brew install ffmpeg
@@ -44,8 +46,8 @@ brew install ffmpeg
 
 The plugin asks for permission to start it, and only starts it from the PATH,
 `/opt/homebrew/bin`, `/usr/local/bin` or `/opt/local/bin`. If it's somewhere
-else, link it into one of those. Lossless playback doesn't need ffmpeg for mp3,
-flac and ogg files.
+else, link it into one of those. Formats MyGo decodes directly without ffmpeg:
+mp3, flac, ogg, wav, m4a and aac.
 
 If playback stops immediately with EOF after an earlier failed attempt, clear
 the app's audio cache in Settings. MyGo keeps whatever the server returned as

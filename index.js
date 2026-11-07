@@ -5,7 +5,7 @@ const CLIENT_NAME = "MyGo Music";
 const MEDIA_SALT = "mygo-music";
 const PAGE_SIZE = 50;
 const ALBUM_PAGE = 30;
-const RAW_TYPES = ["mp3", "flac", "ogg"];
+const RAW_TYPES = ["mp3", "flac", "ogg", "oga", "wav", "m4a", "aac"];
 const SERVING_AT_MOST = 3;
 const SERVED_WITHIN = 10 * 60 * 1000;
 const DEFAULT_IMAGE = "https://www.navidrome.org/favicons/apple-icon-114x114.png";
@@ -641,8 +641,8 @@ function suffixOf(url) {
 }
 
 function streamType(suffix) {
-  if (suffix === "flac") return "flac";
   if (suffix === "ogg" || suffix === "oga" || suffix === "opus") return "ogg";
+  if (["flac", "wav", "m4a", "aac"].indexOf(suffix) !== -1) return suffix;
   return "mp3";
 }
 
@@ -710,15 +710,23 @@ async function serve(source, bitRate) {
     if (at >= 0) serving.splice(at, 1);
   });
   const until = Date.now() + 15000;
-  while (!proc.errorOutput().includes("Input #0")) {
+  let last = "";
+  let quietSince = Date.now();
+  while (true) {
     if (stopped) throw new Error("ffmpeg stopped: " + proc.errorOutput().trim().split("\n").pop());
+    const output = proc.errorOutput();
+    if (output !== last) {
+      last = output;
+      quietSince = Date.now();
+    } else if (Date.now() - quietSince >= 100 && /^\s*Stream #0:\d+[^:]*: Audio:[^\n]*\n/m.test(output)) {
+      break;
+    }
     if (Date.now() > until) {
       proc.kill();
       throw new Error(tr("the audio didn't start in time"));
     }
     await sleep(30);
   }
-  await sleep(100);
   return "http://127.0.0.1:" + port + "/";
 }
 
@@ -734,25 +742,18 @@ export async function stream({ id, quality }) {
   const suffix = String(song.suffix || "").toLowerCase();
   const level = quality || "standard";
   const source = mediaURL("stream", { id: ref.id, format: "raw" });
-  if (level === "lossless" && RAW_TYPES.indexOf(suffix) !== -1) {
+  if (RAW_TYPES.indexOf(suffix) !== -1) {
     const out = { url: source, type: streamType(suffix), quality: level };
     if (song.size) out.size = song.size;
     return out;
   }
   const bitRate = level === "standard" ? 128 : 320;
-  try {
-    return {
-      url: await serve(source, bitRate),
-      type: "mp3",
-      quality: level,
-      bitRate: bitRate * 1000,
-    };
-  } catch (error) {
-    if (error.code !== "setup" || RAW_TYPES.indexOf(suffix) === -1) throw error;
-    const out = { url: source, type: streamType(suffix), quality: level };
-    if (song.size) out.size = song.size;
-    return out;
-  }
+  return {
+    url: await serve(source, bitRate),
+    type: "mp3",
+    quality: level,
+    bitRate: bitRate * 1000,
+  };
 }
 
 function lrcTime(ms) {

@@ -239,7 +239,7 @@ my-plugin/
 { "url": "https://…/song.mp3", "type": "mp3", "quality": "high", "size": 123, "headers": {}, "gain": 0, "peak": 0 }
 ```
 
-`type`：`mp3`、`flac` 或 `ogg`。
+`type`：`mp3`、`flac`、`ogg`、`wav`、`m4a` 或 `aac`。
 
 ```json
 { "lrc": "[00:01.00]A line", "translation": "[00:01.00]译文" }

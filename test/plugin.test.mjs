@@ -135,6 +135,8 @@ const server = createServer((request, response) => {
       return send({ artist: { ...artist, album: [album] } });
     case "getSong":
       if (params.get("id") === "s2") return send({ song: { ...songTwo, suffix: "m4a", size: 999 } });
+      if (params.get("id") === "s3") return send({ song: { ...song, id: "s3", suffix: "wma", size: 777 } });
+      if (params.get("id") === "s4") return send({ song: { ...songTwo, id: "s4", suffix: "mp3", size: 555, bitRate: 96 } });
       return send({ song });
     case "search3":
       return send({
@@ -239,16 +241,20 @@ globalThis.host = {
   spawn: (command, args) => {
     spawns.push({ command, args });
     const version = args[0] === "-version";
+    let reads = 0;
     return {
       closeStdin() {},
       async readLine() {
         return null;
       },
       wait() {
-        return new Promise((resolve) => setTimeout(() => resolve(0), version ? 0 : 30));
+        return new Promise((resolve) => setTimeout(() => resolve(0), version ? 0 : 500));
       },
       errorOutput() {
-        return version ? "ffmpeg version 9.0.2\n" : "Input #0, flac, from 'x':\n";
+        if (version) return "ffmpeg version 9.0.2\n";
+        reads++;
+        const line = "  Stream #0:0[0x1](und): Audio: flac, 48000 Hz, stereo, s32 (24 bit)";
+        return "    LYRICS: " + "x".repeat(8192) + "\n" + (reads < 2 ? line.slice(0, 20) : line + "\n");
       },
       kill() {},
     };
@@ -334,14 +340,9 @@ assert.deepEqual(last("updatePlaylist").params.getAll("songIndexToRemove"), ["0"
 assert.deepEqual(last("updatePlaylist").params.getAll("songIdToAdd"), ["s2", "s1"]);
 
 const standard = await plugin.stream({ id: "tr:s1", quality: "standard" });
-assert.equal(standard.type, "mp3");
-assert.equal(standard.bitRate, 128000);
-assert.match(standard.url, /^http:\/\/127\.0\.0\.1:\d+\/$/);
-const standardArgs = spawns.filter((spawn) => spawn.args[0] === "-nostdin").at(-1).args;
-assert.equal(standardArgs[standardArgs.indexOf("-b:a") + 1], "128k");
-assert.equal(standardArgs[standardArgs.indexOf("-listen") + 1], "1");
-assert.match(standardArgs[standardArgs.indexOf("-i") + 1], /format=raw/);
-assert.match(standardArgs[standardArgs.indexOf("-i") + 1], /u=me/);
+assert.equal(standard.type, "flac");
+assert.equal(standard.size, 123456);
+assert.match(standard.url, /format=raw/);
 
 const lossless = await plugin.stream({ id: "tr:s1", quality: "lossless" });
 assert.equal(lossless.type, "flac");
@@ -349,12 +350,31 @@ assert.equal(lossless.size, 123456);
 assert.match(lossless.url, /format=raw/);
 assert.match(lossless.url, /\/rest\/stream\.view\?/);
 
-const transcoded = await plugin.stream({ id: "tr:s2", quality: "high" });
+const highLossless = await plugin.stream({ id: "tr:s1", quality: "high" });
+assert.equal(highLossless.type, "flac");
+assert.equal(highLossless.size, 123456);
+assert.match(highLossless.url, /format=raw/);
+
+const losslessM4a = await plugin.stream({ id: "tr:s2", quality: "lossless" });
+assert.equal(losslessM4a.type, "m4a");
+assert.equal(losslessM4a.size, 999);
+assert.match(losslessM4a.url, /id=s2/);
+
+const transcodedStandard = await plugin.stream({ id: "tr:s3", quality: "standard" });
+assert.equal(transcodedStandard.type, "mp3");
+assert.equal(transcodedStandard.bitRate, 128000);
+assert.match(transcodedStandard.url, /^http:\/\/127\.0\.0\.1:\d+\/$/);
+const standardArgs = spawns.filter((spawn) => spawn.args[0] === "-nostdin").at(-1).args;
+assert.equal(standardArgs[standardArgs.indexOf("-b:a") + 1], "128k");
+assert.equal(standardArgs[standardArgs.indexOf("-listen") + 1], "1");
+assert.match(standardArgs[standardArgs.indexOf("-i") + 1], /id=s3/);
+
+const transcoded = await plugin.stream({ id: "tr:s3", quality: "high" });
 assert.equal(transcoded.type, "mp3");
 assert.equal(transcoded.bitRate, 320000);
 const highArgs = spawns.filter((spawn) => spawn.args[0] === "-nostdin").at(-1).args;
 assert.equal(highArgs[highArgs.indexOf("-b:a") + 1], "320k");
-assert.match(highArgs[highArgs.indexOf("-i") + 1], /id=s2/);
+assert.match(highArgs[highArgs.indexOf("-i") + 1], /id=s3/);
 
 const liked = await plugin.liked({ offset: 0 });
 assert.equal(liked.tracks.length, 1);

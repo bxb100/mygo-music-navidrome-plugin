@@ -180,10 +180,9 @@ ffmpeg 处理：
 
 | MyGo quality | 处理 |
 | --- | --- |
-| `lossless`，mp3/flac/ogg | 直接播放 Navidrome 原文件 |
-| `lossless`，其他格式 | 本机 ffmpeg 转 320k mp3 |
-| `standard` | 本机 ffmpeg 转 128k mp3 |
-| `high` | 本机 ffmpeg 转 320k mp3 |
+| 原生格式（mp3/flac/ogg/wav/m4a/aac） | 直接播放 Navidrome 原文件 |
+| 其他格式，`standard` | 本机 ffmpeg 转 128k mp3 |
+| 其他格式，`high` / `lossless` | 本机 ffmpeg 转 320k mp3 |
 
 本机 ffmpeg 用 `-listen 1 http://127.0.0.1:<port>/` 直接向播放器提供 MP3 流，
 所以不需要等整首歌转完，也不依赖 Navidrome 服务器的 ffmpeg 版本。
@@ -194,7 +193,7 @@ ffmpeg 处理：
 "process": ["ffmpeg", "/opt/homebrew/bin/ffmpeg", "/usr/local/bin/ffmpeg", "/opt/local/bin/ffmpeg"]
 ```
 
-插件会依次尝试这些路径；都没有时，mp3/flac/ogg 会回退为原文件播放。
+插件会依次尝试这些路径；非原生格式在没有 ffmpeg 时会提示安装。
 
 播放器会把收到的响应体当作歌曲缓存。旧版本依赖服务器转码失败时，Navidrome 返回
 的 XML 错误也会被缓存成 `.mp3`，再次播放会立即 EOF；清空应用音频缓存即可。

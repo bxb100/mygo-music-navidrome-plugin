@@ -3,6 +3,9 @@
 A [MyGo Music](https://github.com/egoist/mygo-music) plugin that plays a
 [Navidrome](https://www.navidrome.org) library through its Subsonic API.
 
+It needs MyGo Music 0.1.8 or later, and speaks English or Simplified Chinese
+as the app does. Your library's titles and names keep their original language.
+
 ## Install
 
 Open MyGo Music → Settings → Plugins → `+` → from GitHub, and enter this
@@ -39,8 +42,10 @@ Standard and high playback need ffmpeg on this Mac:
 brew install ffmpeg
 ```
 
-The plugin asks for permission to start it. Lossless playback doesn't need
-ffmpeg for mp3, flac and ogg files.
+The plugin asks for permission to start it, and only starts it from the PATH,
+`/opt/homebrew/bin`, `/usr/local/bin` or `/opt/local/bin`. If it's somewhere
+else, link it into one of those. Lossless playback doesn't need ffmpeg for mp3,
+flac and ogg files.
 
 If playback stops immediately with EOF after an earlier failed attempt, clear
 the app's audio cache in Settings. MyGo keeps whatever the server returned as

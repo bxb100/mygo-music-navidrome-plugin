@@ -327,7 +327,7 @@ export async function home() {
       morePage: "albums:" + specs[i][1] + ":12",
     });
   }
-  return { sections };
+  return { title: tr("Home"), sections };
 }
 
 export async function browse({ page }) {

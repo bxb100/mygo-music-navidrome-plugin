@@ -277,6 +277,7 @@ assert.equal(
 );
 
 const home = await plugin.home();
+assert.equal(home.title, "Home");
 assert.deepEqual(
   home.sections.map((section) => section.title),
   ["For you", "Recently added", "Recently played", "Most played", "Starred albums"]

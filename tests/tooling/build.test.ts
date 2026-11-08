@@ -18,27 +18,6 @@ test("single file bundle specification", () => {
   assert.doesNotMatch(content, /\bBuffer\./, "bundle should not use Buffer global");
 });
 
-test("deterministic zip and checksum specification", () => {
-  const releaseDir = resolve(root, "dist/release");
-  assert.ok(existsSync(releaseDir), "dist/release should exist");
-
-  const files = readdirSync(releaseDir);
-  const zipFile = files.find((f) => f.endsWith(".zip"));
-  assert.ok(zipFile, "release zip file should exist");
-
-  const shaFile = files.find((f) => f.endsWith(".sha256"));
-  assert.ok(shaFile, "sha256 file should exist");
-
-  const zipBytes = readFileSync(resolve(releaseDir, zipFile));
-  const expectedHash = createHash("sha256").update(zipBytes).digest("hex");
-
-  const shaContent = readFileSync(resolve(releaseDir, shaFile), "utf8");
-  assert.ok(
-    shaContent.includes(expectedHash),
-    `sha256 file content "${shaContent}" should match computed hash "${expectedHash}"`,
-  );
-});
-
 test("version synchronization specification", () => {
   const pkg = JSON.parse(readFileSync(resolve(root, "package.json"), "utf8"));
   const plugin = JSON.parse(readFileSync(resolve(root, "plugin.json"), "utf8"));

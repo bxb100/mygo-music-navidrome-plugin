@@ -23,41 +23,41 @@ my-plugin/
 
 ```json
 {
-  "id": "example",
-  "name": "Example",
-  "version": "1.0.0",
-  "minAppVersion": "0.1.8",
-  "main": "index.js",
-  "playback": "stream",
-  "permissions": { "network": ["api.example.com"] },
-  "settings": [
-    {
-      "key": "apiKey",
-      "label": "API Key",
-      "help": "From your account page",
-      "link": "https://example.com/keys"
-    }
-  ],
-  "navigation": [
-    { "builtin": "home" },
-    { "title": "Charts", "page": "charts", "icon": "chart" },
-    { "title": "Stations", "builtin": "stations" }
-  ]
+    "id": "example",
+    "name": "Example",
+    "version": "1.0.0",
+    "minAppVersion": "0.1.8",
+    "main": "index.js",
+    "playback": "stream",
+    "permissions": { "network": ["api.example.com"] },
+    "settings": [
+        {
+            "key": "apiKey",
+            "label": "API Key",
+            "help": "From your account page",
+            "link": "https://example.com/keys"
+        }
+    ],
+    "navigation": [
+        { "builtin": "home" },
+        { "title": "Charts", "page": "charts", "icon": "chart" },
+        { "title": "Stations", "builtin": "stations" }
+    ]
 }
 ```
 
-| 字段 | 说明 |
-| --- | --- |
-| `id` | 插件标识 |
-| `name` | 显示名称，可被 `locales` 翻译 |
-| `version` | 插件版本 |
-| `minAppVersion` | 兼容的最老应用版本；更老的应用拒绝安装并提示升级。0.1.8 之前的版本不读这个字段。在 `imageUrl` 里用 `{size}` 的插件填 `0.1.20` |
-| `main` | 入口文件，JavaScript 或 TypeScript |
-| `playback` | `stream`：应用播放 `stream` 返回的音频；`remote`：插件自己发声，应用调用 `remote*` |
-| `permissions.network` | `fetch` 能访问的主机，支持 `*.example.com`；`["*"]` 允许任意主机；缺省则不能访问网络 |
-| `permissions.process` | `host.spawn` 能启动的程序；路径或 PATH 中的名字，支持 `*` 通配；`["*"]` 或 `true` 表示任意程序 |
-| `settings` | 账号等设置项：`{key, label, help, link}` |
-| `navigation` | 侧边栏，按顺序显示 |
+| 字段                  | 说明                                                                                                                          |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `id`                  | 插件标识                                                                                                                      |
+| `name`                | 显示名称，可被 `locales` 翻译                                                                                                 |
+| `version`             | 插件版本                                                                                                                      |
+| `minAppVersion`       | 兼容的最老应用版本；更老的应用拒绝安装并提示升级。0.1.8 之前的版本不读这个字段。在 `imageUrl` 里用 `{size}` 的插件填 `0.1.20` |
+| `main`                | 入口文件，JavaScript 或 TypeScript                                                                                            |
+| `playback`            | `stream`：应用播放 `stream` 返回的音频；`remote`：插件自己发声，应用调用 `remote*`                                            |
+| `permissions.network` | `fetch` 能访问的主机，支持 `*.example.com`；`["*"]` 允许任意主机；缺省则不能访问网络                                          |
+| `permissions.process` | `host.spawn` 能启动的程序；路径或 PATH 中的名字，支持 `*` 通配；`["*"]` 或 `true` 表示任意程序                                |
+| `settings`            | 账号等设置项：`{key, label, help, link}`                                                                                      |
+| `navigation`          | 侧边栏，按顺序显示                                                                                                            |
 
 `navigation` 每一项：
 
@@ -75,53 +75,53 @@ my-plugin/
 
 每个导出接收一个参数对象，返回一个值或 Promise。除特别说明外都可以是异步的。
 
-| 导出 | 参数 | 返回 |
-| --- | --- | --- |
-| `signIn` | — | `{id, name, imageUrl}` |
-| `signOut` | — | — |
-| `account` | — | `{id, name, imageUrl}`，未登录时 `null` |
-| `setSetting` | `{key, value}` | — |
-| `home` | — | `Browse` |
-| `browse` | `{page}` | `Browse` |
-| `search` | `{query, kind, offset}` | `{tracks/albums/artists/playlists/shows, more}` |
-| `suggest` | `{query}` | `[string]` |
-| `recent` | — | `[Track]` |
-| `played` | `{id}` | — |
-| `liked` | `{offset}` | `{tracks, more}` |
-| `isLiked` | `{ids}` | `{id: bool}` |
-| `like` | `{id, on}` | — |
-| `likeEpisode` | `{id, on}` | — |
-| `album` | `{id}` | `{album, tracks}` |
-| `artist` | `{id}` | `{artist, tracks, albums}` |
-| `saveAlbum` | `{id, on}` | — |
-| `followArtist` | `{id, on}` | — |
-| `savedAlbums` | `{offset}` | `{albums, more}` |
-| `playlists` | — | `[Playlist]` |
-| `playlist` | `{id}` | 带 `tracks` 的 `Playlist` |
-| `createPlaylist` | `{name}` | `Playlist` |
-| `renamePlaylist` | `{id, name}` | — |
-| `deletePlaylist` | `{id}` | — |
-| `addToPlaylist` | `{id, trackIds}` | — |
-| `removeFromPlaylist` | `{id, trackIds}` | — |
-| `movePlaylistTrack` | `{id, from, to}` | — |
-| `savePlaylist` | `{id, on}` | — |
-| `shows` | — | `[Show]` |
-| `show` | `{id, offset}` | `{show, episodes, more}` |
-| `subscribeShow` | `{id, on}` | — |
-| `stations` | — | `[Station]` |
-| `stationNext` | `{id}` | `[Track]` |
-| `comments` | `{trackId, offset}` | `{comments, total, more}` |
-| `likeComment` | `{trackId, commentId, on}` | — |
-| `postComment` | `{trackId, text}` | `Comment` |
-| `lyrics` | `{id}` | `{lrc, translation}` 或 `{lines}` |
-| `stream` | `{id, quality}` | `{url, type, headers, size, gain, peak}` |
-| `remotePlay` | `{ids, start, position}` | — |
-| `remotePause` / `remoteResume` | — | — |
-| `remoteSeek` | `{position}` | — |
-| `remoteVolume` | `{percent}` | — |
-| `remoteState` | — | `RemoteState` 或 `null` |
-| `remoteDevices` | — | `[{id, name, active}]` |
-| `remoteUse` | `{deviceId}` | — |
+| 导出                           | 参数                       | 返回                                            |
+| ------------------------------ | -------------------------- | ----------------------------------------------- |
+| `signIn`                       | —                          | `{id, name, imageUrl}`                          |
+| `signOut`                      | —                          | —                                               |
+| `account`                      | —                          | `{id, name, imageUrl}`，未登录时 `null`         |
+| `setSetting`                   | `{key, value}`             | —                                               |
+| `home`                         | —                          | `Browse`                                        |
+| `browse`                       | `{page}`                   | `Browse`                                        |
+| `search`                       | `{query, kind, offset}`    | `{tracks/albums/artists/playlists/shows, more}` |
+| `suggest`                      | `{query}`                  | `[string]`                                      |
+| `recent`                       | —                          | `[Track]`                                       |
+| `played`                       | `{id}`                     | —                                               |
+| `liked`                        | `{offset}`                 | `{tracks, more}`                                |
+| `isLiked`                      | `{ids}`                    | `{id: bool}`                                    |
+| `like`                         | `{id, on}`                 | —                                               |
+| `likeEpisode`                  | `{id, on}`                 | —                                               |
+| `album`                        | `{id}`                     | `{album, tracks}`                               |
+| `artist`                       | `{id}`                     | `{artist, tracks, albums}`                      |
+| `saveAlbum`                    | `{id, on}`                 | —                                               |
+| `followArtist`                 | `{id, on}`                 | —                                               |
+| `savedAlbums`                  | `{offset}`                 | `{albums, more}`                                |
+| `playlists`                    | —                          | `[Playlist]`                                    |
+| `playlist`                     | `{id}`                     | 带 `tracks` 的 `Playlist`                       |
+| `createPlaylist`               | `{name}`                   | `Playlist`                                      |
+| `renamePlaylist`               | `{id, name}`               | —                                               |
+| `deletePlaylist`               | `{id}`                     | —                                               |
+| `addToPlaylist`                | `{id, trackIds}`           | —                                               |
+| `removeFromPlaylist`           | `{id, trackIds}`           | —                                               |
+| `movePlaylistTrack`            | `{id, from, to}`           | —                                               |
+| `savePlaylist`                 | `{id, on}`                 | —                                               |
+| `shows`                        | —                          | `[Show]`                                        |
+| `show`                         | `{id, offset}`             | `{show, episodes, more}`                        |
+| `subscribeShow`                | `{id, on}`                 | —                                               |
+| `stations`                     | —                          | `[Station]`                                     |
+| `stationNext`                  | `{id}`                     | `[Track]`                                       |
+| `comments`                     | `{trackId, offset}`        | `{comments, total, more}`                       |
+| `likeComment`                  | `{trackId, commentId, on}` | —                                               |
+| `postComment`                  | `{trackId, text}`          | `Comment`                                       |
+| `lyrics`                       | `{id}`                     | `{lrc, translation}` 或 `{lines}`               |
+| `stream`                       | `{id, quality}`            | `{url, type, headers, size, gain, peak}`        |
+| `remotePlay`                   | `{ids, start, position}`   | —                                               |
+| `remotePause` / `remoteResume` | —                          | —                                               |
+| `remoteSeek`                   | `{position}`               | —                                               |
+| `remoteVolume`                 | `{percent}`                | —                                               |
+| `remoteState`                  | —                          | `RemoteState` 或 `null`                         |
+| `remoteDevices`                | —                          | `[{id, name, active}]`                          |
+| `remoteUse`                    | `{deviceId}`               | —                                               |
 
 `search` 的 `kind`：`tracks`、`albums`、`artists`、`playlists`、`shows`。
 
@@ -155,12 +155,12 @@ my-plugin/
 
 ```json
 {
-  "id": "al1",
-  "name": "First Album",
-  "imageUrl": "…",
-  "artists": [{ "id": "a1", "name": "The Examples" }],
-  "released": "2026-01-01",
-  "saved": false
+    "id": "al1",
+    "name": "First Album",
+    "imageUrl": "…",
+    "artists": [{ "id": "a1", "name": "The Examples" }],
+    "released": "2026-01-01",
+    "saved": false
 }
 ```
 
@@ -168,16 +168,16 @@ my-plugin/
 
 ```json
 {
-  "id": "t1",
-  "name": "Song 1",
-  "artists": [{ "id": "a1", "name": "The Examples" }],
-  "album": { "id": "al1", "name": "First Album" },
-  "duration": 12000,
-  "url": "…",
-  "unavailable": false,
-  "showId": "",
-  "description": "",
-  "published": ""
+    "id": "t1",
+    "name": "Song 1",
+    "artists": [{ "id": "a1", "name": "The Examples" }],
+    "album": { "id": "al1", "name": "First Album" },
+    "duration": 12000,
+    "url": "…",
+    "unavailable": false,
+    "showId": "",
+    "description": "",
+    "published": ""
 }
 ```
 
@@ -187,15 +187,15 @@ my-plugin/
 
 ```json
 {
-  "id": "p1",
-  "name": "Favourites",
-  "imageUrl": "…",
-  "description": "…",
-  "owner": "…",
-  "trackCount": 3,
-  "mine": true,
-  "saved": false,
-  "tracks": []
+    "id": "p1",
+    "name": "Favourites",
+    "imageUrl": "…",
+    "description": "…",
+    "owner": "…",
+    "trackCount": 3,
+    "mine": true,
+    "saved": false,
+    "tracks": []
 }
 ```
 
@@ -213,21 +213,21 @@ my-plugin/
 
 ```json
 {
-  "title": "Discover",
-  "subtitle": "…",
-  "sections": [
-    {
-      "title": "Artists",
-      "tracks": [],
-      "albums": [],
-      "artists": [],
-      "playlists": [],
-      "shows": [],
-      "stations": [],
-      "links": [{ "title": "Charts", "subtitle": "…", "imageUrl": "…", "page": "charts" }],
-      "morePage": "charts:2"
-    }
-  ]
+    "title": "Discover",
+    "subtitle": "…",
+    "sections": [
+        {
+            "title": "Artists",
+            "tracks": [],
+            "albums": [],
+            "artists": [],
+            "playlists": [],
+            "shows": [],
+            "stations": [],
+            "links": [{ "title": "Charts", "subtitle": "…", "imageUrl": "…", "page": "charts" }],
+            "morePage": "charts:2"
+        }
+    ]
 }
 ```
 
@@ -247,15 +247,15 @@ my-plugin/
 
 ```json
 {
-  "lines": [
-    {
-      "start": 1000,
-      "end": 3000,
-      "text": "A line",
-      "translation": "…",
-      "words": [{ "start": 1000, "end": 1600, "text": "Word " }]
-    }
-  ]
+    "lines": [
+        {
+            "start": 1000,
+            "end": 3000,
+            "text": "A line",
+            "translation": "…",
+            "words": [{ "start": 1000, "end": 1600, "text": "Word " }]
+        }
+    ]
 }
 ```
 
@@ -265,33 +265,33 @@ my-plugin/
 
 抛出的 Error 可以带 `code`：
 
-| code | 应用行为 |
-| --- | --- |
-| `signIn` | 提示用户登录 |
-| `setup` | 打开插件设置 |
-| `unavailable` | 表示无法播放/获取 |
+| code          | 应用行为             |
+| ------------- | -------------------- |
+| `signIn`      | 提示用户登录         |
+| `setup`       | 打开插件设置         |
+| `unavailable` | 表示无法播放/获取    |
 | `unsupported` | 表示插件不支持该能力 |
 
 其他错误直接显示 `message`。
 
 ## host 对象
 
-| API | 说明 |
-| --- | --- |
-| `host.platform` / `host.arch` | 如 `darwin`、`arm64` |
-| `host.dir` | 插件目录 |
-| `host.dataDir` | 插件数据目录 |
-| `host.storage.get(key)` / `.set(key, value)` / `.remove(key)` | 持久化 JSON 值 |
-| `host.setting(key)` | 用户在设置里填的值 |
-| `host.t(text)` / `host.language()` | 翻译文本；语言为 `en` 或 `zh-CN` |
-| `host.removeDataDir(name)` | 删除 `host.dataDir` 下的文件夹 |
-| `host.crypto.md5(text)` | MD5 十六进制 |
-| `host.crypto.aesEcbEncrypt(key, text)` | AES-ECB + PKCS#7，十六进制 |
-| `host.openURL(url)` | 用浏览器打开 |
-| `host.signInPrompt({qr, text})` | 登录窗口显示二维码/提示 |
-| `host.waitForRedirect({port, path, timeout, page})` | 等待浏览器登录回调，需要网络权限 |
-| `host.webSignIn({url, cookiesOf, until, userAgent})` | 在应用内窗口完成网页登录，返回 `{cookie}` |
-| `host.spawn(command, args)` | 启动程序，需要进程权限；返回 `{pid, write, closeStdin, readLine, wait, kill, errorOutput}` |
+| API                                                           | 说明                                                                                       |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `host.platform` / `host.arch`                                 | 如 `darwin`、`arm64`                                                                       |
+| `host.dir`                                                    | 插件目录                                                                                   |
+| `host.dataDir`                                                | 插件数据目录                                                                               |
+| `host.storage.get(key)` / `.set(key, value)` / `.remove(key)` | 持久化 JSON 值                                                                             |
+| `host.setting(key)`                                           | 用户在设置里填的值                                                                         |
+| `host.t(text)` / `host.language()`                            | 翻译文本；语言为 `en` 或 `zh-CN`                                                           |
+| `host.removeDataDir(name)`                                    | 删除 `host.dataDir` 下的文件夹                                                             |
+| `host.crypto.md5(text)`                                       | MD5 十六进制                                                                               |
+| `host.crypto.aesEcbEncrypt(key, text)`                        | AES-ECB + PKCS#7，十六进制                                                                 |
+| `host.openURL(url)`                                           | 用浏览器打开                                                                               |
+| `host.signInPrompt({qr, text})`                               | 登录窗口显示二维码/提示                                                                    |
+| `host.waitForRedirect({port, path, timeout, page})`           | 等待浏览器登录回调，需要网络权限                                                           |
+| `host.webSignIn({url, cookiesOf, until, userAgent})`          | 在应用内窗口完成网页登录，返回 `{cookie}`                                                  |
+| `host.spawn(command, args)`                                   | 启动程序，需要进程权限；返回 `{pid, write, closeStdin, readLine, wait, kill, errorOutput}` |
 
 插件还能使用 JavaScript 标准库、定时器、`fetch`、`URL`、`console`。
 

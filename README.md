@@ -56,11 +56,11 @@ EOF until it is removed.
 
 ## Settings
 
-| Setting | Description |
-| --- | --- |
-| Server URL | Navidrome base URL, with `http://` or `https://` |
-| Username | Navidrome account |
-| Password | Used for Subsonic token auth, stored in the plugin's settings |
+| Setting    | Description                                                   |
+| ---------- | ------------------------------------------------------------- |
+| Server URL | Navidrome base URL, with `http://` or `https://`              |
+| Username   | Navidrome account                                             |
+| Password   | Used for Subsonic token auth, stored in the plugin's settings |
 
 The plugin asks for network access to any host because the server is chosen at
 runtime. Cover art and audio URLs use a fixed token salt so they can be loaded
